@@ -1,36 +1,28 @@
 package com.springboot.controller;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.poi.excel.ExcelReader;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.springboot.common.CodeEnum;
 import com.springboot.common.Result;
 import com.springboot.entity.Cart;
 import com.springboot.entity.User;
-import com.springboot.service.IUserService;
+import com.springboot.service.UserService;
 import com.springboot.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import com.springboot.service.IOrdersService;
+import com.springboot.service.OrdersService;
 import com.springboot.entity.Orders;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-/*
- * <p>
- *  前端控制器
- * </p>
+/**
+ * 订单控制类
+ *
  *
  * @author 文涛
  * @since 2023-03-04
@@ -40,69 +32,132 @@ import org.springframework.web.multipart.MultipartFile;
 public class OrdersController {
 
     @Resource
-    private IUserService userService;
+    private UserService userService;
 
     @Resource
-    private IOrdersService ordersService;
+    private OrdersService ordersService;
 
-//    @Resource
-//    IOrderItemService orderItemService;
+    //private final String now = DateUtil.now();
 
-    private final String now = DateUtil.now();
-
-    // 新增或者更新
+    /**
+     * 新增或者更新
+     * @param orders
+     * @return
+     */
     @PostMapping
     public Result save(@RequestBody Orders orders) {
         if (orders.getId() == null) {
-//            orders.setCreateTime(DateUtil.now());
-//            TokenUtils.getCurrentUser().getUsername();
             orders.setUserid(Integer.valueOf(TokenUtils.getCurrentUser().getUsername()));
         }
-        ordersService.saveOrUpdate(orders);
-        return Result.success();
+        boolean value = ordersService.saveOrUpdate(orders);
+        if (!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "保存失败");
+        }
+        return Result.success("保存成功");
     }
 
+    /**
+     * 下单
+     * @param carts
+     * @return
+     */
     @PostMapping("/addOrder")
     public Result addOrder(@RequestBody List<Cart> carts) {
         Integer userId = TokenUtils.getCurrentUser().getId();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",userId);
-        List<User> list = userService.list(queryWrapper);
-        for (User users : list){
+        List<User> userlist = userService.list(queryWrapper);
+        for (User users : userlist){
             String address = users.getAddress();
             ordersService.addOrder(carts,address);
         }
         return Result.success();
     }
 
+    /**
+     * 修改订单状态
+     * @param orders 订单信息
+     * @return
+     */
     @PostMapping("/status")
     public Result updateOrder(@RequestBody Orders orders) {
-        ordersService.saveOrUpdate(orders);
-        return Result.success();
+        Boolean value = ordersService.updateOrder(orders);
+        if (!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "修改失败");
+        }
+        return Result.success("修改成功");
     }
 
+    /**
+     * 前端订单展示
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/page/PersonOrders")
+    public Result findPagePersonOrders(@RequestParam Integer pageNum,
+                                       @RequestParam Integer pageSize) {
+        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
+        Integer userid = TokenUtils.getCurrentUser().getId();
+        queryWrapper.eq("userid", userid);
+
+        return Result.success("查询成功",ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
+    }
+
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
-        ordersService.removeById(id);
-        return Result.success();
+        boolean value = ordersService.removeById(id);
+        if(!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
+        }
+        return Result.success("删除成功");
     }
 
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
-        ordersService.removeByIds(ids);
-        return Result.success();
+        boolean value = ordersService.removeByIds(ids);
+        if(!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
+        }
+        return Result.success("删除成功");
     }
 
+    /**
+     * 查新全部
+     * @return
+     */
     @GetMapping
     public Result findAll() {
-        return Result.success(ordersService.list());
+        return Result.success("查询成功",ordersService.list());
     }
 
+    /**
+     * 通过id查询
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
-        return Result.success(ordersService.getById(id));
+        return Result.success("查询成功",ordersService.getById(id));
     }
 
+    /**
+     * 分页查询，条件查询
+     * @param name 名字
+     * @param pageNum 页码
+     * @param pageSize 一页显示数目
+     * @return
+     */
     @GetMapping("/page")
     public Result findPage(@RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
@@ -111,20 +166,7 @@ public class OrdersController {
         if (!"".equals(name)) {
             queryWrapper.like("name", name);
         }
-        return Result.success(ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
-    }
-
-    @GetMapping("/page/PersonOrders")
-    public Result findPagePersonOrders(@RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
-        QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
-        Integer userid = TokenUtils.getCurrentUser().getId();
-        queryWrapper.eq("userid", userid);
-        if (!"".equals(name)) {
-            queryWrapper.like("name", name);
-        }
-        return Result.success(ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
+        return Result.success("查询成功",ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
     }
 
 }

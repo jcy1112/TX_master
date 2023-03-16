@@ -10,19 +10,18 @@ import java.math.BigDecimal;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * <p>
+/**
+ * 购物车实体类
  *
- * </p>
  *
  * @author 文涛
  * @since 2023-03-07
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value = "Cart对象", description = "")
 public class Cart implements Serializable {
 

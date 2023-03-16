@@ -14,8 +14,20 @@ import java.util.List;
  * @author 文涛
  * @since 2023-03-04
  */
-public interface IOrdersService extends IService<Orders> {
+public interface OrdersService extends IService<Orders> {
 
+    /**
+     * 下订单
+     * @param carts
+     * @param address
+     */
     void addOrder(List<Cart> carts,String address);
+
+
+    /**
+     * 修改订单状态
+     * @param orders
+     */
+    Boolean updateOrder(Orders orders);
 
 }

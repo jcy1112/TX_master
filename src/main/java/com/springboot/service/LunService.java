@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.entity.Item;
+import com.springboot.entity.Lun;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author 文涛
- * @since 2023-03-04
+ * @since 2023-03-07
  */
-public interface IItemService extends IService<Item> {
+public interface LunService extends IService<Lun> {
 
 }

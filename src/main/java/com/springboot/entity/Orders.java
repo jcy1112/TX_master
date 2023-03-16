@@ -15,19 +15,18 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * <p>
+/**
+ * 订单实体类
  *
- * </p>
  *
  * @author 文涛
  * @since 2023-03-04
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value = "Orders对象", description = "")
 public class Orders implements Serializable {
 

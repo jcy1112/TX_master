@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.springboot.entity.User;
-import com.springboot.service.IUserService;
+import com.springboot.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,13 +15,19 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+/*
+ *
+ * Token 工具类
+ * @Author jcy
+ * @Date 2023/3/3 20:27
+ */
 @Component
 public class TokenUtils {
 
-    private static IUserService staticUserService;
+    private static UserService staticUserService;
 
     @Resource
-    private IUserService userService;
+    private UserService userService;
 
     @PostConstruct
     public void setUserService() {
@@ -30,7 +36,6 @@ public class TokenUtils {
 
     /*
      * 生成token
-     *
      * @return
      */
     public static String genToken(String userId, String sign) {
@@ -41,7 +46,6 @@ public class TokenUtils {
 
     /*
      * 获取当前登录的用户信息
-     *
      * @return user对象
      */
     public static User getCurrentUser() {

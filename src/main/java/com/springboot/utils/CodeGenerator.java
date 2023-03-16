@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.generator.config.OutputFile;
 import java.util.Collections;
 
 /*
- * mp代码生成器
+ *
  *
  */
 public class CodeGenerator {

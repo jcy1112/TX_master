@@ -6,6 +6,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ *
+ * 跨域配置
+ * @Author jcy
+ * @Date 2023/3/3 9:31
+ */
 @Configuration
 public class CorsConfig {
     // 当前跨域请求最大有效时长。这里默认1天
@@ -14,7 +20,7 @@ public class CorsConfig {
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("http://localhost:8081"); // 1 设置访问源地址
+        corsConfiguration.addAllowedOrigin("*"); // 1 设置访问源地址
         corsConfiguration.addAllowedHeader("*"); // 2 设置访问源请求头
         corsConfiguration.addAllowedMethod("*"); // 3 设置访问源请求方法
         corsConfiguration.setMaxAge(MAX_AGE);

@@ -7,10 +7,19 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MP配置类
+ * @Author jcy
+ * @Date 2023/3/2 20:24
+ */
 @Configuration
 @MapperScan("com.springboot.mapper")
 public class MybatisPlusConfig {
-    // 最新版
+
+    /**
+     * MP 分页插件
+     * @return
+     */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();

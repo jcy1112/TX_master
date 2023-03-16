@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.entity.Cart;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-/*
+/**
  * <p>
  *  Mapper 接口
  * </p>

@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.entity.Goods;
+import com.springboot.entity.Item;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author 文涛
  * @since 2023-03-04
  */
-public interface IGoodsService extends IService<Goods> {
+public interface ItemService extends IService<Item> {
 
 }

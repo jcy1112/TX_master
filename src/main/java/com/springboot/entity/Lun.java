@@ -8,19 +8,18 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * <p>
+/**
+ * 轮播图实体类
  *
- * </p>
  *
  * @author 文涛
  * @since 2023-03-07
  */
-@Getter
-@Setter
+@Data
 @ApiModel(value = "Lun对象", description = "")
 public class Lun implements Serializable {
 

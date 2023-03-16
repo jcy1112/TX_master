@@ -5,6 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+
+/**
+ * 文件实体类
+ * @Author jcy
+ * @Date 2023/3/4 14:55
+ */
+
 @Data
 @TableName("sys_file")
 public class Files {
@@ -18,5 +25,4 @@ public class Files {
     private String md5;
     private Boolean isDelete;
     private Boolean enable;
-
 }

@@ -1,10 +1,11 @@
 server:
+  ip: 121.40.234.7
   port: 9090
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mall?serverTimezone=GMT%2b8
+    url: jdbc:mysql://121.40.234.7:3306/mall?serverTimezone=GMT%2b8
     username: root
     password: 123456
   redis:
@@ -21,5 +22,5 @@ mybatis-plus:
 
 files:
   upload:
-#    path:/home/files/
+#    path: /home/files/
     path: D:/java/project/网上书城/files/

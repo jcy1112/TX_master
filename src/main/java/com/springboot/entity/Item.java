@@ -10,21 +10,20 @@ import java.math.BigDecimal;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-/*
- * <p>
+/**
+ * 订单信息实体类
  *
- * </p>
  *
  * @author 文涛
  * @since 2023-03-04
  */
-@Getter
-@Setter
+@Data
 @TableName("order_item")
 @ApiModel(value = "Item对象", description = "")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,8 +50,19 @@ public class Item implements Serializable {
     @ApiModelProperty("商品图片")
     @Alias("商品图片")
     private String img;
+
+    @ApiModelProperty("商品名称")
+    @Alias("商品名称")
     private String goodsName;
+
     private String comment;
 
-
+    public Item(Integer orderId, Integer goodsId, Integer num, BigDecimal price, String img, String goodsName) {
+        this.orderId = orderId;
+        this.goodsId = goodsId;
+        this.num = num;
+        this.price = price;
+        this.img = img;
+        this.goodsName = goodsName;
+    }
 }

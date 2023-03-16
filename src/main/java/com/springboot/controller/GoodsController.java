@@ -1,18 +1,13 @@
 package com.springboot.controller;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.springboot.common.Constants;
+import com.springboot.common.CodeEnum;
 import com.springboot.common.Result;
-import com.springboot.config.interceptor.AuthAccess;
-import com.springboot.entity.Files;
-import com.springboot.mapper.FileMapper;
+import com.springboot.common.AuthAccess;
 import com.springboot.mapper.GoodsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -27,16 +22,14 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
-import com.springboot.service.IGoodsService;
+import com.springboot.service.GoodsService;
 import com.springboot.entity.Goods;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/*
- * <p>
- *  前端控制器
- * </p>
+/**
+ * 商品控制类
  *
  * @author 文涛
  * @since 2023-03-04
@@ -46,58 +39,101 @@ import org.springframework.web.multipart.MultipartFile;
 public class GoodsController {
 
     @Resource
-    private IGoodsService goodsService;
+    private GoodsService goodsService;
 
-    @Resource
-    private GoodsMapper goodsMapper;
+    /**
+     * 前台商品列表，
+     * @AuthAccess  自定义注解 放行权限
+     * @param name
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @AuthAccess
+    @GetMapping("/front")
+    public Result frontAll(@RequestParam(defaultValue = "") String name,
+                           @RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize) {
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        if (!"".equals(name)) {
+            queryWrapper.like("name", name);
+        }
+        return Result.success(goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
 
-    private final String now = DateUtil.now();
+    /**
+     * 前台按照id查询商品
+     * @param id
+     * @return
+     */
+    @AuthAccess
+    @GetMapping("/{id}")
+    public Result findOne(@PathVariable Integer id) {
+        return Result.success("查询成功",goodsService.getById(id));
+    }
 
-    // 新增或者更新
+    /**
+     * 新增或者更新
+     * @param goods
+     * @return
+     */
     @PostMapping
     public Result save(@RequestBody Goods goods) {
-        if (goods.getId() == null) {
-            //goods.setTime(DateUtil.now());
-            //goods.setUser(TokenUtils.getCurrentUser().getUsername());
+        boolean value = goodsService.saveOrUpdate(goods);
+        if (!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "保存失败");
         }
-        goodsService.saveOrUpdate(goods);
-        // 清空缓存
-//        flushRedis(Constants.FILES_KEY);
-        return Result.success();
+        return Result.success("保存成功");
     }
 
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
-        goodsService.removeById(id);
-        // 清空缓存
-//        flushRedis(Constants.FILES_KEY);
-        return Result.success();
+        boolean value = goodsService.removeById(id);
+        if(!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
+        }
+        return Result.success("删除成功");
     }
 
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
-        goodsService.removeByIds(ids);
-        // 清空缓存
-//        flushRedis(Constants.FILES_KEY);
-        return Result.success();
+        boolean value = goodsService.removeByIds(ids);
+        if(!value){
+            return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
+        }
+        return Result.success("删除成功");
     }
 
+    /**
+     * 按照状态查找全部
+     * @param status 商品状态
+     * @return
+     */
     @GetMapping
     public Result findAll(@RequestParam(required = false) Boolean status) {
         QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(status != null, "status", status);
-        return Result.success(goodsService.list(queryWrapper));
+        return Result.success("查询成功",goodsService.list(queryWrapper));
     }
 
-    @AuthAccess
-    @GetMapping("/{id}")
-    public Result findOne(@PathVariable Integer id) {
-        return Result.success(goodsService.getById(id));
-    }
-
+    /**
+     * 分页查询，条件查询
+     * @param name
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/page")
     public Result findPage(@RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
@@ -106,11 +142,13 @@ public class GoodsController {
         if (!"".equals(name)) {
             queryWrapper.like("name", name);
         }
-        return Result.success(goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success("查询成功",goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /*
+    /**
      * 导出接口
+     * @param response
+     * @throws Exception
      */
     @GetMapping("/export")
     public void export(HttpServletResponse response) throws Exception {
@@ -118,10 +156,8 @@ public class GoodsController {
         List<Goods> list = goodsService.list();
         // 在内存操作，写出到浏览器
         ExcelWriter writer = ExcelUtil.getWriter(true);
-
         // 一次性写出list内的对象到excel，使用默认样式，强制输出标题
         writer.write(list, true);
-
         // 设置浏览器响应的格式
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         String fileName = URLEncoder.encode("Goods信息表", "UTF-8");
@@ -132,9 +168,10 @@ public class GoodsController {
         writer.close();
     }
 
-    /*
+    /**
      * excel 导入
      * @param file
+     * @return
      * @throws Exception
      */
     @PostMapping("/import")
@@ -143,55 +180,8 @@ public class GoodsController {
         ExcelReader reader = ExcelUtil.getReader(inputStream);
         // 通过 javabean的方式读取Excel内的对象，但是要求表头必须是英文，跟javabean的属性要对应起来
         List<Goods> list = reader.readAll(Goods.class);
-//        goodsService.saveBatch(list);
-//        // 清空缓存
-//        flushRedis(Constants.FILES_KEY);
-        return Result.success();
+        return Result.success("导入成功");
     }
-
-
-    @AuthAccess
-    @GetMapping("/front")
-    //    @Cacheable(value = "files" ,key = "'frontAll'")
-    public Result frontAll(@RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
-
-        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
-        if (!"".equals(name)) {
-            queryWrapper.like("name", name);
-        }
-        return Result.success(goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
-
-//        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
-//        if (!"".equals(name)) {
-//            queryWrapper.like("name", name);
-//            return Result.success(goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
-//        }else {
-//            String jsonStr = stringRedisTemplate.opsForValue().get(Constants.FILES_KEY);
-//            if (StrUtil.isBlank(jsonStr)){//  取出来的json是空的
-//                Page<Goods> pagegoods = goodsService.page(new Page<>(pageNum, pageSize));     //  从数据库取出数据
-//                stringRedisTemplate.opsForValue().set(Constants.FILES_KEY, JSONUtil.toJsonStr(pagegoods));
-//                return Result.success(pagegoods);
-//            }else {
-//                // 减轻数据库的压力
-//                // 如果有, 从redis缓存中获取数据
-//                Page<Goods> pagegoods = JSONUtil.toBean(jsonStr, new TypeReference<Page<Goods>>() {}, true);
-//                if (!(pagegoods.getCurrent() ==pageNum)){     //如果当前页不等于redis存储的页码，则从数据库取出
-//                    Page<Goods> pagegoods1 = goodsService.page(new Page<>(pageNum, pageSize));     // 从数据库取出数据
-//                    stringRedisTemplate.opsForValue().set(Constants.FILES_KEY, JSONUtil.toJsonStr(pagegoods1));
-//                    return Result.success(pagegoods1);
-//                }
-//                return Result.success(pagegoods);
-//            }
-//        }
-    }
-
-    // 删除缓存
-    private void flushRedis(String key) {
-        stringRedisTemplate.delete(key);
-    }
-
 
 }
 

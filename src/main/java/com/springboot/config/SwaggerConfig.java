@@ -11,11 +11,17 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
+/**
+ * Swagger配置类
+ * 测试接口
+ * @Author jcy
+ * @Date 2023/3/2  20:47
+ */
 @Configuration
 @EnableOpenApi
 public class SwaggerConfig {
 
-    /*
+    /**
      * 创建API应用
      * apiInfo() 增加API相关信息
      * 通过select()函数返回一个ApiSelectorBuilder实例,用来控制哪些接口暴露给Swagger来展现，
@@ -36,9 +42,10 @@ public class SwaggerConfig {
                 .build();
     }
 
-    /*
+    /**
      * 创建该API的基本信息（这些基本信息会展现在文档页面中）
      * 访问地址：http://ip:port/swagger-ui.html/index.html
+     * http://localhost:9090/swagger-ui/index.html
      *
      * @return
      */

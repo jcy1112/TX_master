@@ -6,20 +6,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * <p>
- * 
- * </p>
+/**
+ * 商品实体类
  *
  * @author 文涛
  * @since 2023-03-04
  */
-@Getter
-@Setter
-  @ApiModel(value = "Goods对象", description = "")
+@Data
+@ApiModel(value = "Goods对象", description = "")
 public class Goods implements Serializable {
 
     private static final long serialVersionUID = 1L;

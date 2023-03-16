@@ -7,20 +7,20 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * <p>
- * 
- * </p>
+/**
+ * 用户实体类
+ * @TableName 指定表名
+ * @TableId 指明主键
  *
  * @author 文涛
  * @since 2023-03-04
  */
-@Getter
-@Setter
-  @TableName("sys_user")
+@Data
+@TableName("sys_user")
 @ApiModel(value = "User对象", description = "")
 public class User implements Serializable {
 
@@ -54,8 +54,6 @@ public class User implements Serializable {
       @ApiModelProperty("头像")
       private String avatarUrl;
 
-      @ApiModelProperty("角色")
-      private String role;
 
 
 }

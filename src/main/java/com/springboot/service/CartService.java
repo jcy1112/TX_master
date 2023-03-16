@@ -1,6 +1,6 @@
 package com.springboot.service;
 
-import com.springboot.entity.Lun;
+import com.springboot.entity.Cart;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author 文涛
  * @since 2023-03-07
  */
-public interface ILunService extends IService<Lun> {
+public interface CartService extends IService<Cart> {
 
 }
