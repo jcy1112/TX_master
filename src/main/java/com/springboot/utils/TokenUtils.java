@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-/*
+/**
  *
  * Token 工具类
  * @Author jcy
@@ -44,7 +44,7 @@ public class TokenUtils {
                 .sign(Algorithm.HMAC256(sign)); // 以 password 作为 token 的密钥
     }
 
-    /*
+    /**
      * 获取当前登录的用户信息
      * @return user对象
      */
