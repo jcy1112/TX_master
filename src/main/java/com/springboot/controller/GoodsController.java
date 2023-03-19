@@ -43,11 +43,12 @@ public class GoodsController {
 
     /**
      * 前台商品列表，
-     * @AuthAccess  自定义注解 放行权限
+     *
      * @param name
      * @param pageNum
      * @param pageSize
      * @return
+     * @AuthAccess 自定义注解 放行权限
      */
     @AuthAccess
     @GetMapping("/front")
@@ -64,24 +65,26 @@ public class GoodsController {
 
     /**
      * 前台按照id查询商品
+     *
      * @param id
      * @return
      */
     @AuthAccess
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
-        return Result.success("查询成功",goodsService.getById(id));
+        return Result.success("查询成功", goodsService.getById(id));
     }
 
     /**
      * 新增或者更新
+     *
      * @param goods
      * @return
      */
     @PostMapping
     public Result save(@RequestBody Goods goods) {
         boolean value = goodsService.saveOrUpdate(goods);
-        if (!value){
+        if (!value) {
             return Result.error(CodeEnum.CODE_402.getCode(), "保存失败");
         }
         return Result.success("保存成功");
@@ -89,13 +92,14 @@ public class GoodsController {
 
     /**
      * 删除
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         boolean value = goodsService.removeById(id);
-        if(!value){
+        if (!value) {
             return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
         }
         return Result.success("删除成功");
@@ -103,13 +107,14 @@ public class GoodsController {
 
     /**
      * 批量删除
+     *
      * @param ids
      * @return
      */
     @PostMapping("/del/batch")
     public Result deleteBatch(@RequestBody List<Integer> ids) {
         boolean value = goodsService.removeByIds(ids);
-        if(!value){
+        if (!value) {
             return Result.error(CodeEnum.CODE_402.getCode(), "删除失败");
         }
         return Result.success("删除成功");
@@ -117,6 +122,7 @@ public class GoodsController {
 
     /**
      * 按照状态查找全部
+     *
      * @param status 商品状态
      * @return
      */
@@ -124,11 +130,12 @@ public class GoodsController {
     public Result findAll(@RequestParam(required = false) Boolean status) {
         QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(status != null, "status", status);
-        return Result.success("查询成功",goodsService.list(queryWrapper));
+        return Result.success("查询成功", goodsService.list(queryWrapper));
     }
 
     /**
      * 分页查询，条件查询
+     *
      * @param name
      * @param pageNum
      * @param pageSize
@@ -142,11 +149,34 @@ public class GoodsController {
         if (!"".equals(name)) {
             queryWrapper.like("name", name);
         }
-        return Result.success("查询成功",goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
+        return Result.success("查询成功", goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
     /**
+     * 分页查询，条件查询
+     *查询已上架商品
+     * @param name
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/page/status")
+    public Result findstatusPage(@RequestParam(defaultValue = "") String name,
+                                 @RequestParam Integer pageNum,
+                                 @RequestParam Integer pageSize,
+                                 @RequestParam Boolean status) {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", status);
+        if (!"".equals(name)) {
+            queryWrapper.like("name", name);
+        }
+        return Result.success("查询成功", goodsService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+
+    /**
      * 导出接口
+     *
      * @param response
      * @throws Exception
      */
@@ -170,6 +200,7 @@ public class GoodsController {
 
     /**
      * excel 导入
+     *
      * @param file
      * @return
      * @throws Exception
