@@ -54,7 +54,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         Orders orders = new Orders();
         orders.setOrderno(IdUtil.fastSimpleUUID());
         orders.setUserid(TokenUtils.getCurrentUser().getId());
-        orders.setStatus(OrderStatusEnum.NEED_SEND.getCode());
+        orders.setStatus(OrderStatusEnum.NEED_PAY.getCode());
         orders.setAddress(address);
 
         for (Cart cart : carts) {

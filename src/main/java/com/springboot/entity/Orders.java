@@ -59,11 +59,11 @@ public class Orders implements Serializable {
     @ApiModelProperty("付款时间")
     @Alias("付款时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date payTime;
+    private Date paymentTime;
 
-    @ApiModelProperty("付款编号")
-    @Alias("付款编号")
-    private String payno;
+    @ApiModelProperty("支付宝交易号")
+    @Alias("支付宝交易号")
+    private String alipayNo;
 
     @ApiModelProperty("收货地址")
     @Alias("收货地址")
