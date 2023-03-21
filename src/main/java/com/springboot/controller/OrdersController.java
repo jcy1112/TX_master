@@ -118,7 +118,11 @@ public class OrdersController {
                                        @RequestParam(defaultValue = "") Integer status) {
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
         Integer userid = TokenUtils.getCurrentUser().getId();
-        queryWrapper.eq("userid", userid);
+        if (status!=null){
+            queryWrapper.eq("userid", userid).eq("status",status);
+        }else {
+            queryWrapper.eq("userid", userid);
+        }
         return Result.success("查询成功", ordersService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
