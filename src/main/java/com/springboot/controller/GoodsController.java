@@ -42,7 +42,7 @@ public class GoodsController {
     private GoodsService goodsService;
 
     /**
-     * 前台商品列表，
+     *     前台商品列表，
      *
      * @param name
      * @param pageNum
