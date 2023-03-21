@@ -57,6 +57,7 @@ public class GoodsController {
                            @RequestParam Integer pageSize) {
 
         QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",true);
         if (!"".equals(name)) {
             queryWrapper.like("name", name);
         }

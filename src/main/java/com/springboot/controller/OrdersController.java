@@ -90,18 +90,19 @@ public class OrdersController {
 
     /**
      * 前端订单展示
+     *
      * @param pageNum
      * @param pageSize
      * @return
      */
     @GetMapping("/page/PersonOrders")
     public Result findPagePersonOrders(@RequestParam Integer pageNum,
-                                       @RequestParam Integer pageSize) {
+                                       @RequestParam Integer pageSize,
+                                       @RequestParam(defaultValue = "") Integer status) {
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
         Integer userid = TokenUtils.getCurrentUser().getId();
         queryWrapper.eq("userid", userid);
-
-        return Result.success("查询成功",ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
+        return Result.success("查询成功", ordersService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
     /**
@@ -152,22 +153,27 @@ public class OrdersController {
     }
 
     /**
-     * 分页查询，条件查询
-     * @param name 名字
-     * @param pageNum 页码
+     *    分页查询，条件查询  查询所有订单
+     *
+     * @param orderNo  订单编号
+     * @param pageNum  页码
      * @param pageSize 一页显示数目
      * @return
      */
     @GetMapping("/page")
-    public Result findPage(@RequestParam(defaultValue = "") String name,
+    public Result findPage(@RequestParam(defaultValue = "") String orderNo,
+                           @RequestParam(defaultValue = "") Integer status,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Orders> queryWrapper = new QueryWrapper<>();
-        if (!"".equals(name)) {
-            queryWrapper.like("name", name);
+        if (!"".equals(orderNo)) {
+            queryWrapper.like("orderno", orderNo);
         }
-        return Result.success("查询成功",ordersService.page(new Page<>(pageNum,pageSize),queryWrapper));
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
+        return Result.success("查询成功", ordersService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
-
 }
+
 
