@@ -21,9 +21,7 @@ import lombok.Setter;
  */
 @Data
 @ApiModel(value = "Lun对象", description = "")
-public class Lun implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Lun  {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

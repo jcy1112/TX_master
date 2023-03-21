@@ -24,9 +24,7 @@ import lombok.*;
 @ApiModel(value = "Item对象", description = "")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Item implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Item {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

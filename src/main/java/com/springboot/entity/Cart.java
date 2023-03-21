@@ -23,9 +23,7 @@ import lombok.Setter;
  */
 @Data
 @ApiModel(value = "Cart对象", description = "")
-public class Cart implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Cart  {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

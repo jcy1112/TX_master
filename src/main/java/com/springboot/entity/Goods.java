@@ -18,9 +18,7 @@ import lombok.Setter;
  */
 @Data
 @ApiModel(value = "Goods对象", description = "")
-public class Goods implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Goods  {
 
       @TableId(value = "id", type = IdType.AUTO)
       private Integer id;
@@ -42,6 +40,5 @@ public class Goods implements Serializable {
 
       @ApiModelProperty("状态")
       private Boolean status;
-
 
 }
