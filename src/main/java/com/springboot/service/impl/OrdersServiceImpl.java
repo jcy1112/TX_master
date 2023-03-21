@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.springboot.common.OrderStatusEnum;
+import com.springboot.controller.dto.GoodsDTO;
 import com.springboot.entity.*;
 import com.springboot.exception.ServiceException;
 import com.springboot.mapper.OrdersMapper;
@@ -85,6 +86,52 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             }
         }
     }
+
+    /**
+     * 商品详情页直接购买
+     * @param goodsDTO
+     * @param address
+     * @return
+     */
+    @Transactional
+    @Override
+    public Orders buy(GoodsDTO goodsDTO , String address) {
+
+        Orders orders = new Orders();
+        orders.setOrderno(IdUtil.fastSimpleUUID());
+        orders.setUserid(TokenUtils.getCurrentUser().getId());
+        orders.setStatus(OrderStatusEnum.NEED_PAY.getCode());
+        orders.setAddress(address);
+
+        BigDecimal total = goodsDTO.getPrice().multiply(BigDecimal.valueOf(goodsDTO.getNums()));
+        
+        orders.setTotal(total);  // 计算总价格
+        save(orders); // 保存订单 获取订单id
+
+        // 下单成功，扣库存
+        Goods stock = goodsService.getById(goodsDTO.getId());
+        if (stock.getNums() < goodsDTO.getNums()) {
+            throw new ServiceException("-1", "库存不足");
+        }
+        stock.setNums(stock.getNums() - goodsDTO.getNums());
+        goodsService.updateById(stock);
+
+        Item orderItem = new Item();
+        orderItem.setOrderId(orders.getId());
+        orderItem.setGoodsName(goodsDTO.getName());
+        orderItem.setPrice(goodsDTO.getPrice());
+        orderItem.setImg(goodsDTO.getImg());
+        orderItem.setNum(goodsDTO.getNums());
+        orderItem.setGoodsId(goodsDTO.getId());
+        boolean result = itemService.save(orderItem);
+        if (result) {
+            // 下单成功后返回订单信息
+            return orders;
+        }
+        return null;
+        
+    }
+
 
 
     /**

@@ -34,4 +34,4 @@ alipay:
   #支付宝公钥
   alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnDbOv0RpIwt3q0316AV0LWE7Jm4UU+2JYTB0Qw1i3fHYO45sSmZbzBhRqymFLkihV4tFQBNSWfdD17FOWGE8OmhY4nT5eiuechqruEY7eD2AuwPUNb8R/3Bijbn0XOitvpmAU6fKLaQxtSBY5sU0SUZ+epSQvbCncKphnqtcUj2MH7KuVOqpdEP60kjFcGmLc2Nnou4EvLBP4j7ba4XDt8SFzC3/cItbwwLqa92y0dGhQhBG0JNuMYr0u6rr6wt+DAxaSlRGjHdbS+GpSVwabM1ihYn9Ty/EjlEaHaMhZ7zeDe7F67R2shKNIiqWinyoKN3xMhLbDinu7KychHqJXwIDAQAB
   #内网穿透域名
-  notifyUrl: http://jxdg4u.natappfree.cc/alipay/notify
+  notifyUrl:  http://8ufqc3.natappfree.cc/alipay/notify

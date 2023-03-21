@@ -1,9 +1,9 @@
 package com.springboot.controller;
 
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.springboot.common.CodeEnum;
 import com.springboot.common.Result;
+import com.springboot.controller.dto.GoodsDTO;
 import com.springboot.entity.Cart;
 import com.springboot.entity.User;
 import com.springboot.service.UserService;
@@ -73,6 +73,23 @@ public class OrdersController {
         }
         return Result.success();
     }
+
+
+    /**
+     * 商品详情页直接购买
+     * @param goodsDTO
+     * @return
+     */
+    @PostMapping("/buy")
+    public Result buy(@RequestBody GoodsDTO goodsDTO) {
+        Integer userId = TokenUtils.getCurrentUser().getId();
+        User user = userService.getById(userId);
+        String address = user.getAddress();
+        Orders orders = ordersService.buy(goodsDTO, address);
+
+        return Result.success(orders);
+    }
+
 
     /**
      * 修改订单状态

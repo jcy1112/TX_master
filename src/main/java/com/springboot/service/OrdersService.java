@@ -1,6 +1,8 @@
 package com.springboot.service;
 
+import com.springboot.controller.dto.GoodsDTO;
 import com.springboot.entity.Cart;
+import com.springboot.entity.Goods;
 import com.springboot.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -22,6 +24,15 @@ public interface OrdersService extends IService<Orders> {
      * @param address
      */
     void addOrder(List<Cart> carts,String address);
+
+
+    /**
+     * 商品详情页直接购买
+     * @param goodsDTO
+     * @param address
+     * @return
+     */
+    Orders buy(GoodsDTO goodsDTO , String address);
 
 
     /**
