@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -47,7 +49,7 @@ public class User  {
       private String address;
 
       @ApiModelProperty("创建时间")
-      private LocalDateTime createTime;
+      private Date createTime;
 
       @ApiModelProperty("头像")
       private String avatarUrl;
